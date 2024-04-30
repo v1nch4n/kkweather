@@ -47,13 +47,24 @@
         button:hover {
             background-color: #0056a0; /* Darker blue color on hover */
         }
+
+        .temperature-result {
+            font-size: 24px;
+            margin-top: 20px;
+        }
+
+        .smiley {
+            font-size: 40px;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
-    <i class="fas fa-plane fa-5x" style="margin-top: 20px;"></i> <!-- Airport icon -->
+    <i class="far fa-smile fa-5x" style="margin-top: 20px;"></i> <!-- Sun icon -->
     <div class="container">
-        <h1 style="margin-top: 20px;">Check Out This Airport!</h1>
+        <h1 style="margin-top: 20px;">Find a Better Place</h1>
         <p id="ipAddress">IP Address: </p>
+        <p id="ipLocation">Location: </p>
         <p id="deviceInfo">Device: </p>
         <form id="cityForm">
             <label for="cityInput">Enter your city: </label>
@@ -62,7 +73,17 @@
             <br><br>
             <button type="submit">Submit</button>
         </form>
-        <p id="temperature">Temperature will be displayed here.</p>
+        <p id="temperature" class="temperature-result">Temperature will be displayed here.</p>
+        <p id="smiley" class="smiley"></p>
+        <br>
+        <form id="desiredTempForm">
+            <label for="desiredTempInput">Enter desired temperature: </label>
+            <br>
+            <input type="number" id="desiredTempInput" name="desiredTempInput" style="width: 100%;">
+            <br><br>
+            <button type="submit">Submit</button>
+        </form>
+        <p id="citiesAboveTemp">Cities with temperature above the desired temperature will be displayed here.</p>
     </div>
 
     <script>
@@ -73,6 +94,15 @@
                 .then(data => {
                     const temperature = Math.round(data.main.temp - 273.15); // Convert from Kelvin to Celsius
                     document.getElementById('temperature').textContent = 'Temperature: ' + temperature + '°C';
+                    // Display smiley based on temperature
+                    const smileyElement = document.getElementById('smiley');
+                    if (temperature < 10) {
+                        smileyElement.textContent = '😨'; // Cold
+                    } else if (temperature < 20) {
+                        smileyElement.textContent = '😊'; // Pleasant
+                    } else {
+                        smileyElement.textContent = '🌞'; // Hot
+                    }
                 })
                 .catch(error => {
                     console.error('Error fetching weather data:', error);
@@ -80,12 +110,38 @@
                 });
         }
 
-        // Function to fetch IP address and device information of the visitor
+        // Function to fetch cities with temperature above the desired temperature
+        function fetchCitiesAboveTemp(desiredTemp) {
+            const apiKey = 'your_api_key'; // Your API key
+            const url = `https://api.openweathermap.org/data/2.5/find?lat=0&lon=0&cnt=10&appid=${apiKey}`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const cities = data.list.filter(city => city.main.temp > desiredTemp).map(city => city.name);
+                    document.getElementById('citiesAboveTemp').textContent = `Cities with temperature above ${desiredTemp}°C: ${cities.join(', ')}`;
+                })
+                .catch(error => {
+                    console.error('Error fetching cities above temperature:', error);
+                    document.getElementById('citiesAboveTemp').textContent = 'Failed to fetch cities above temperature';
+                });
+        }
+
+        // Function to fetch visitor IP address and location
         function fetchVisitorInfo() {
             fetch('https://api.ipify.org?format=json')
                 .then(response => response.json())
                 .then(data => {
                     document.getElementById('ipAddress').textContent += data.ip; // Display IP address
+                    fetch(`https://ipapi.co/${data.ip}/json/`)
+                        .then(response => response.json())
+                        .then(locationData => {
+                            document.getElementById('ipLocation').textContent += locationData.city + ', ' + locationData.region + ', ' + locationData.country_name;
+                        })
+                        .catch(error => {
+                            console.error('Error fetching location:', error);
+                            document.getElementById('ipLocation').textContent += 'Failed to fetch location';
+                        });
                 })
                 .catch(error => {
                     console.error('Error fetching IP address:', error);
@@ -96,11 +152,18 @@
             document.getElementById('deviceInfo').textContent += navigator.userAgent;
         }
 
-        // Event listener for form submission
+        // Event listener for city form submission
         document.getElementById('cityForm').addEventListener('submit', function(event) {
             event.preventDefault(); // Prevent form submission
             const city = document.getElementById('cityInput').value;
             fetchWeather(city); // Fetch weather data based on the entered city
+        });
+
+        // Event listener for desired temperature form submission
+        document.getElementById('desiredTempForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form submission
+            const desiredTemp = document.getElementById('desiredTempInput').value;
+            fetchCitiesAboveTemp(desiredTemp); // Fetch cities with temperature above the desired temperature
         });
 
         // Fetch visitor information when the page loads
