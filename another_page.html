@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Display Airport Icon, Temperature, and Google Trends</title>
+    <title>Display Airport Icon, Temperature, and Latest News in Switzerland</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
@@ -20,7 +20,7 @@
 
         .container {
             width: 90%;
-            max-width: 400px; /* Limit width for better readability on smaller screens */
+            max-width: 600px; /* Limit width for better readability on smaller screens */
             padding: 20px;
             background-color: #fff; /* White background */
             border-radius: 10px;
@@ -59,18 +59,25 @@
             margin-top: 10px;
         }
 
-        .google-trends {
+        .news-container {
             margin-top: 20px;
+            text-align: left;
         }
 
-        .rating {
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        .news-item {
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
         }
 
-        .rating button {
-            margin: 0 10px;
+        .news-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .news-description {
+            font-size: 16px;
         }
     </style>
 </head>
@@ -90,15 +97,11 @@
         </form>
         <p id="temperature" class="temperature-result">Temperature will be displayed here.</p>
         <p id="smiley" class="smiley"></p>
-    </div>
 
-    <!-- Google Trends widget -->
-    <div class="google-trends">
-        <iframe src="https://trends.google.com/trends/trendingsearches/daily/widget?geo=CH&title=Top%20Trending%20Searches&tz=-120" width="100%" height="300" frameborder="0" scrolling="no"></iframe>
-        <div class="rating">
-            <button id="rateTrend1">I follow the trend</button>
-            <button id="rateTrend2">I don't care</button>
-            <button id="rateTrend3">I am totally against this trend</button>
+        <!-- Latest news container -->
+        <div class="news-container">
+            <h2>Latest News in Switzerland</h2>
+            <div id="newsList"></div>
         </div>
     </div>
 
@@ -153,6 +156,36 @@
             document.getElementById('deviceInfo').textContent += navigator.userAgent;
         }
 
+        // Function to fetch latest news in Switzerland
+        function fetchLatestNews() {
+            fetch('https://newsapi.org/v2/top-headlines?country=ch&apiKey=your_news_api_key')
+                .then(response => response.json())
+                .then(data => {
+                    const newsList = document.getElementById('newsList');
+                    data.articles.slice(0, 3).forEach(article => {
+                        const newsItem = document.createElement('div');
+                        newsItem.classList.add('news-item');
+
+                        const title = document.createElement('div');
+                        title.classList.add('news-title');
+                        title.textContent = article.title;
+
+                        const description = document.createElement('div');
+                        description.classList.add('news-description');
+                        description.textContent = article.description;
+
+                        newsItem.appendChild(title);
+                        newsItem.appendChild(description);
+                        newsList.appendChild(newsItem);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching news data:', error);
+                    const newsList = document.getElementById('newsList');
+                    newsList.textContent = 'Failed to fetch news';
+                });
+        }
+
         // Event listener for city form submission
         document.getElementById('cityForm').addEventListener('submit', function(event) {
             event.preventDefault(); // Prevent form submission
@@ -160,21 +193,9 @@
             fetchWeather(city); // Fetch weather data based on the entered city
         });
 
-        // Fetch visitor information when the page loads
+        // Fetch visitor information and latest news when the page loads
         fetchVisitorInfo();
-
-        // Event listeners for trend rating buttons
-        document.getElementById('rateTrend1').addEventListener('click', function() {
-            alert('You rated Trend 1: I follow the trend');
-        });
-
-        document.getElementById('rateTrend2').addEventListener('click', function() {
-            alert('You rated Trend 2: I don\'t care');
-        });
-
-        document.getElementById('rateTrend3').addEventListener('click', function() {
-            alert('You rated Trend 3: I am totally against this trend');
-        });
+        fetchLatestNews();
     </script>
 </body>
 </html>
