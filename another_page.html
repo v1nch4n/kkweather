@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Display Airport Icon, Temperature</title>
+    <title>Display Airport Icon, Temperature, and Google Trends</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
@@ -42,6 +42,7 @@
             font-size: 16px;
             font-weight: bold;
             width: 100%; /* Make buttons full-width */
+            margin-bottom: 10px;
         }
 
         button:hover {
@@ -56,6 +57,20 @@
         .smiley {
             font-size: 40px;
             margin-top: 10px;
+        }
+
+        .google-trends {
+            margin-top: 20px;
+        }
+
+        .rating {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .rating button {
+            margin: 0 10px;
         }
     </style>
 </head>
@@ -75,21 +90,22 @@
         </form>
         <p id="temperature" class="temperature-result">Temperature will be displayed here.</p>
         <p id="smiley" class="smiley"></p>
-        <br>
-        <form id="desiredTempForm">
-            <label for="desiredTempInput">Enter desired temperature: </label>
-            <br>
-            <input type="number" id="desiredTempInput" name="desiredTempInput" style="width: 100%;">
-            <br><br>
-            <button type="submit">Submit</button>
-        </form>
-        <p id="citiesAboveTemp">Cities with temperature above the desired temperature will be displayed here.</p>
+    </div>
+
+    <!-- Google Trends widget -->
+    <div class="google-trends">
+        <iframe src="https://trends.google.com/trends/trendingsearches/daily/widget?geo=CH&title=Top%20Trending%20Searches&tz=-120" width="100%" height="300" frameborder="0" scrolling="no"></iframe>
+        <div class="rating">
+            <button id="rateTrend1">I follow the trend</button>
+            <button id="rateTrend2">I don't care</button>
+            <button id="rateTrend3">I am totally against this trend</button>
+        </div>
     </div>
 
     <script>
         // Function to fetch weather data based on city
         function fetchWeather(city) {
-            fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=70f3673b2a0dc31924858d6e6397bccb`)
+            fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=your_api_key`)
                 .then(response => response.json())
                 .then(data => {
                     const temperature = Math.round(data.main.temp - 273.15); // Convert from Kelvin to Celsius
@@ -107,21 +123,6 @@
                 .catch(error => {
                     console.error('Error fetching weather data:', error);
                     document.getElementById('temperature').textContent = 'Failed to fetch temperature';
-                });
-        }
-
-        // Function to fetch cities with temperature above the desired temperature in Switzerland
-        function fetchCitiesAboveTempInSwitzerland(desiredTemp) {
-            const apiKey = '70f3673b2a0dc31924858d6e6397bccb'; // Your API key
-            fetch('https://api.openweathermap.org/data/2.5/box/city?bbox=5,45.5,10,47&appid=' + apiKey) // Coordinates for Switzerland
-                .then(response => response.json())
-                .then(data => {
-                    const cities = data.list.filter(city => city.main.temp > desiredTemp && city.sys.country === 'CH').map(city => city.name);
-                    document.getElementById('citiesAboveTemp').textContent = `Cities with temperature above ${desiredTemp}°C in Switzerland: ${cities.slice(0, 3).join(', ')}`;
-                })
-                .catch(error => {
-                    console.error('Error fetching cities above temperature in Switzerland:', error);
-                    document.getElementById('citiesAboveTemp').textContent = 'Failed to fetch cities above temperature in Switzerland';
                 });
         }
 
@@ -159,15 +160,21 @@
             fetchWeather(city); // Fetch weather data based on the entered city
         });
 
-        // Event listener for desired temperature form submission
-        document.getElementById('desiredTempForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent form submission
-            const desiredTemp = document.getElementById('desiredTempInput').value;
-            fetchCitiesAboveTempInSwitzerland(desiredTemp); // Fetch cities with temperature above the desired temperature in Switzerland
-        });
-
         // Fetch visitor information when the page loads
         fetchVisitorInfo();
+
+        // Event listeners for trend rating buttons
+        document.getElementById('rateTrend1').addEventListener('click', function() {
+            alert('You rated Trend 1: I follow the trend');
+        });
+
+        document.getElementById('rateTrend2').addEventListener('click', function() {
+            alert('You rated Trend 2: I don\'t care');
+        });
+
+        document.getElementById('rateTrend3').addEventListener('click', function() {
+            alert('You rated Trend 3: I am totally against this trend');
+        });
     </script>
 </body>
 </html>
