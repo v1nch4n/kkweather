@@ -16,13 +16,14 @@
     </form>
     <p id="temperature">Temperature will be displayed here.</p>
     <p id="airportList">Nearby airports will be displayed here.</p>
+    <p id="coordinates">Coordinates will be displayed here.</p> <!-- New paragraph for displaying coordinates -->
     <br>
     <a href="another_page.html"><button>Go to Another Page</button></a>
 
     <script>
         // Function to fetch weather data based on city
         function fetchWeather(city) {
-            fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=70f3673b2a0dc31924858d6e6397bccb`)
+            fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&70f3673b2a0dc31924858d6e6397bccb`)
                 .then(response => response.json())
                 .then(data => {
                     const temperature = Math.round(data.main.temp - 273.15); // Convert from Kelvin to Celsius
@@ -44,7 +45,7 @@
                     if (data && data.length > 0) {
                         const latitude = data[0].lat;
                         const longitude = data[0].lon;
-                        console.log(`Coordinates of ${city}: ${latitude}, ${longitude}`);
+                        document.getElementById('coordinates').textContent = `Coordinates: ${latitude}, ${longitude}`; // Display coordinates
                         // Call fetchWeather with the coordinates
                         fetchWeather(city);
                         // Call fetchNearbyAirports with the coordinates
