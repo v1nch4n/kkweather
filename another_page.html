@@ -89,7 +89,7 @@
     <script>
         // Function to fetch weather data based on city
         function fetchWeather(city) {
-            fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=your_api_key`)
+            fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=70f3673b2a0dc31924858d6e6397bccb`)
                 .then(response => response.json())
                 .then(data => {
                     const temperature = Math.round(data.main.temp - 273.15); // Convert from Kelvin to Celsius
@@ -137,6 +137,8 @@
                         .then(response => response.json())
                         .then(locationData => {
                             document.getElementById('ipLocation').textContent += locationData.city + ', ' + locationData.region + ', ' + locationData.country_name;
+                            // Prepopulate city input field with the city of the visitor's IP address
+                            document.getElementById('cityInput').value = locationData.city;
                         })
                         .catch(error => {
                             console.error('Error fetching location:', error);
