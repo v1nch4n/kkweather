@@ -7,17 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
-            animation: rainbow 1s infinite;
-        }
-
-        @keyframes rainbow {
-            0% { background-color: red; }
-            16.666% { background-color: orange; }
-            33.333% { background-color: yellow; }
-            50% { background-color: green; }
-            66.666% { background-color: blue; }
-            83.333% { background-color: indigo; }
-            100% { background-color: violet; }
+            background-color: #2e1b3b; /* Deep purple color */
         }
     </style>
 </head>
@@ -34,7 +24,9 @@
     <p id="airportList">Nearby airports will be displayed here.</p>
     <p id="coordinates">Coordinates will be displayed here.</p>
     <br>
-    <a href="another_page.html"><button>Go to Another Page</button></a>
+    <a href="another_page.html"><button>Go to Another Page</button></a> <!-- Link to another page -->
+    <br><br>
+    <a href="yet_another_page.html"><button>Go to Again Another Page</button></a> <!-- Link to yet another page -->
 
     <h2>Check Out This Airport!</h2>
     <form id="airportForm">
@@ -47,7 +39,7 @@
     <script>
         // Function to fetch weather data based on city
         function fetchWeather(city) {
-            fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=70f3673b2a0dc31924858d6e6397bccb`)
+            fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=your_api_key`)
                 .then(response => response.json())
                 .then(data => {
                     const temperature = Math.round(data.main.temp - 273.15); // Convert from Kelvin to Celsius
@@ -85,7 +77,7 @@
 
         // Function to fetch nearby airports based on city coordinates using World Airports Directory API from RapidAPI
         function fetchNearbyAirports(latitude, longitude) {
-            const rapidApiKey = '558b410954msh015dce61d6f2b94p13db76jsncc800a42accd'; // Your RapidAPI key
+            const rapidApiKey = 'your_rapidapi_key'; // Your RapidAPI key
             fetch(`https://world-airports-directory.p.rapidapi.com/v1/airports/nearby/${latitude}/${longitude}`, {
                 method: 'GET',
                 headers: {
@@ -110,7 +102,7 @@
 
         // Function to fetch airport information based on airport code using World Airports Directory API from RapidAPI
         function fetchAirportInfo(airportCode) {
-            const rapidApiKey = '558b410954msh015dce61d6f2b94p13db76jsncc800a42accd'; // Your RapidAPI key
+            const rapidApiKey = 'your_rapidapi_key'; // Your RapidAPI key
             fetch(`https://world-airports-directory.p.rapidapi.com/v1/airports/${airportCode}`, {
                 method: 'GET',
                 headers: {
