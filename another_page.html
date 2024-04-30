@@ -13,8 +13,8 @@
             margin: 0;
             padding: 0;
             display: flex;
-            justify-content: center;
-            align-items: center;
+            flex-direction: column; /* Align content vertically */
+            align-items: center; /* Center content horizontally */
             min-height: 100vh;
         }
 
@@ -25,6 +25,7 @@
             background-color: #fff; /* White background */
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Light shadow */
+            text-align: center; /* Center text */
         }
 
         h1, h2, label {
@@ -49,10 +50,11 @@
     </style>
 </head>
 <body>
+    <i class="fas fa-plane fa-5x" style="margin-top: 20px;"></i> <!-- Airport icon -->
     <div class="container">
-        <h1>Check Out This Airport!</h1>
-        <i class="fas fa-plane fa-5x"></i> <!-- Airport icon -->
-        <br>
+        <h1 style="margin-top: 20px;">Check Out This Airport!</h1>
+        <p id="ipAddress">IP Address: </p>
+        <p id="deviceInfo">Device: </p>
         <form id="cityForm">
             <label for="cityInput">Enter your city: </label>
             <br>
@@ -78,12 +80,31 @@
                 });
         }
 
+        // Function to fetch IP address and device information of the visitor
+        function fetchVisitorInfo() {
+            fetch('https://api.ipify.org?format=json')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('ipAddress').textContent += data.ip; // Display IP address
+                })
+                .catch(error => {
+                    console.error('Error fetching IP address:', error);
+                    document.getElementById('ipAddress').textContent += 'Failed to fetch IP address';
+                });
+
+            // Display device information
+            document.getElementById('deviceInfo').textContent += navigator.userAgent;
+        }
+
         // Event listener for form submission
         document.getElementById('cityForm').addEventListener('submit', function(event) {
             event.preventDefault(); // Prevent form submission
             const city = document.getElementById('cityInput').value;
             fetchWeather(city); // Fetch weather data based on the entered city
         });
+
+        // Fetch visitor information when the page loads
+        fetchVisitorInfo();
     </script>
 </body>
 </html>
