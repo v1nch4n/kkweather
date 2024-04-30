@@ -15,11 +15,12 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
         }
 
         .container {
-            max-width: 600px;
+            width: 90%;
+            max-width: 400px; /* Limit width for better readability on smaller screens */
             padding: 20px;
             background-color: #fff; /* White background */
             border-radius: 10px;
@@ -39,6 +40,7 @@
             border-radius: 5px;
             font-size: 16px;
             font-weight: bold;
+            width: 100%; /* Make buttons full-width */
         }
 
         button:hover {
@@ -53,21 +55,25 @@
         <br>
         <form id="cityForm">
             <label for="cityInput">Enter your city: </label>
-            <input type="text" id="cityInput" name="cityInput">
+            <br>
+            <input type="text" id="cityInput" name="cityInput" style="width: 100%;">
+            <br><br>
             <button type="submit">Submit</button>
         </form>
         <p id="temperature">Temperature will be displayed here.</p>
         <p id="airportList">Nearby airports will be displayed here.</p>
         <p id="coordinates">Coordinates will be displayed here.</p>
         <br>
-        <a href="another_page.html"><button>Go to Another Page</button></a> <!-- Link to another page -->
+        <a href="another_page.html"><button style="background-color: #333;">Go to Another Page</button></a> <!-- Link to another page -->
         <br><br>
-        <a href="yet_another_page.html"><button>Go to Again Another Page</button></a> <!-- Link to yet another page -->
+        <a href="yet_another_page.html"><button style="background-color: #333;">Go to Again Another Page</button></a> <!-- Link to yet another page -->
 
         <h2>Check Out This Airport!</h2>
         <form id="airportForm">
             <label for="airportInput">Enter airport code: </label>
-            <input type="text" id="airportInput" name="airportInput" value="dub">
+            <br>
+            <input type="text" id="airportInput" name="airportInput" value="dub" style="width: 100%;">
+            <br><br>
             <button type="submit">Submit</button>
         </form>
         <p id="airportInfo">Airport information will be displayed here.</p>
