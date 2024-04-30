@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Display Airport Icon, Temperature, and Nearby Airports</title>
+    <title>Display Airport Icon, Temperature</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
@@ -61,22 +61,6 @@
             <button type="submit">Submit</button>
         </form>
         <p id="temperature">Temperature will be displayed here.</p>
-        <p id="airportList">Nearby airports will be displayed here.</p>
-        <p id="coordinates">Coordinates will be displayed here.</p>
-        <br>
-        <a href="another_page.html"><button style="background-color: #333;">Go to Another Page</button></a> <!-- Link to another page -->
-        <br><br>
-        <a href="yet_another_page.html"><button style="background-color: #333;">Go to Again Another Page</button></a> <!-- Link to yet another page -->
-
-        <h2>Check Out This Airport!</h2>
-        <form id="airportForm">
-            <label for="airportInput">Enter airport code: </label>
-            <br>
-            <input type="text" id="airportInput" name="airportInput" value="dub" style="width: 100%;">
-            <br><br>
-            <button type="submit">Submit</button>
-        </form>
-        <p id="airportInfo">Airport information will be displayed here.</p>
     </div>
 
     <script>
@@ -94,98 +78,11 @@
                 });
         }
 
-        // Function to fetch coordinates of a city using OpenStreetMap Nominatim API
-        function fetchCoordinates(city) {
-            const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(city)}`;
-
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    if (data && data.length > 0) {
-                        const latitude = data[0].lat;
-                        const longitude = data[0].lon;
-                        document.getElementById('coordinates').textContent = `Coordinates: ${latitude}, ${longitude}`; // Display coordinates
-                        // Call fetchWeather with the coordinates
-                        fetchWeather(city);
-                        // Call fetchNearbyAirports with the coordinates
-                        fetchNearbyAirports(latitude, longitude);
-                    } else {
-                        console.error('No results found for the city:', city);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching coordinates:', error);
-                });
-        }
-
-        // Function to fetch nearby airports based on city coordinates using World Airports Directory API from RapidAPI
-        function fetchNearbyAirports(latitude, longitude) {
-            const rapidApiKey = 'your_rapidapi_key'; // Your RapidAPI key
-            fetch(`https://world-airports-directory.p.rapidapi.com/v1/airports/nearby/${latitude}/${longitude}`, {
-                method: 'GET',
-                headers: {
-                    'X-RapidAPI-Key': rapidApiKey
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data && data.data) {
-                    const airportList = data.data.map(airport => airport.name).join(', ');
-                    document.getElementById('airportList').textContent = 'Nearby Airports: ' + airportList;
-                } else {
-                    console.error('No nearby airports found.');
-                    document.getElementById('airportList').textContent = 'No nearby airports found.';
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching airport data:', error);
-                document.getElementById('airportList').textContent = 'Failed to fetch nearby airports';
-            });
-        }
-
-        // Function to fetch airport information based on airport code using World Airports Directory API from RapidAPI
-        function fetchAirportInfo(airportCode) {
-            const rapidApiKey = 'your_rapidapi_key'; // Your RapidAPI key
-            fetch(`https://world-airports-directory.p.rapidapi.com/v1/airports/${airportCode}`, {
-                method: 'GET',
-                headers: {
-                    'X-RapidAPI-Key': rapidApiKey
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data && data.data) {
-                    const airportInfo = data.data;
-                    document.getElementById('airportInfo').innerHTML = `
-                        <h2>${airportInfo.name}</h2>
-                        <p>IATA code: ${airportInfo.iataCode}</p>
-                        <p>ICAO code: ${airportInfo.icaoCode}</p>
-                        <p>Location: ${airportInfo.location.city}, ${airportInfo.location.country}</p>
-                        <p>Latitude: ${airportInfo.location.latitude}, Longitude: ${airportInfo.location.longitude}</p>
-                    `;
-                } else {
-                    console.error('No airport found.');
-                    document.getElementById('airportInfo').textContent = 'Airport not found.';
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching airport data:', error);
-                document.getElementById('airportInfo').textContent = 'Failed to fetch airport information';
-            });
-        }
-
         // Event listener for form submission
         document.getElementById('cityForm').addEventListener('submit', function(event) {
             event.preventDefault(); // Prevent form submission
             const city = document.getElementById('cityInput').value;
-            fetchCoordinates(city); // Fetch coordinates and then weather data and nearby airports
-        });
-
-        // Event listener for airport form submission
-        document.getElementById('airportForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent form submission
-            const airportCode = document.getElementById('airportInput').value;
-            fetchAirportInfo(airportCode); // Fetch airport information
+            fetchWeather(city); // Fetch weather data based on the entered city
         });
     </script>
 </body>
