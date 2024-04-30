@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Display Bike Picture, Temperature, and Nearby Airports</title>
+    <title>Display Airport Icon, Temperature, and Nearby Airports</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <h1>Check Out This Bike!</h1>
-    <img src="https://example.com/path/to/your/bike/image.jpg" alt="Bike Picture">
+    <h1>Check Out This Airport!</h1>
+    <i class="fas fa-plane fa-5x"></i> <!-- Airport icon -->
     <br>
     <form id="cityForm">
         <label for="cityInput">Enter your city: </label>
@@ -16,14 +17,14 @@
     </form>
     <p id="temperature">Temperature will be displayed here.</p>
     <p id="airportList">Nearby airports will be displayed here.</p>
-    <p id="coordinates">Coordinates will be displayed here.</p> <!-- New paragraph for displaying coordinates -->
+    <p id="coordinates">Coordinates will be displayed here.</p>
     <br>
     <a href="another_page.html"><button>Go to Another Page</button></a>
 
     <script>
         // Function to fetch weather data based on city
         function fetchWeather(city) {
-            fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&70f3673b2a0dc31924858d6e6397bccb`)
+            fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=70f3673b2a0dc31924858d6e6397bccb`)
                 .then(response => response.json())
                 .then(data => {
                     const temperature = Math.round(data.main.temp - 273.15); // Convert from Kelvin to Celsius
