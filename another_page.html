@@ -60,18 +60,29 @@
                 });
         }
 
-        // Function to fetch nearby airports based on city coordinates using OurAirports API
+        // Function to fetch nearby airports based on city coordinates using World Airports API from RapidAPI
         function fetchNearbyAirports(latitude, longitude) {
-            fetch(`https://ourairports.com/data/navaids.json?near=${latitude},${longitude}&navaid=VTZ`)
-                .then(response => response.json())
-                .then(data => {
-                    const airportList = data.map(navaid => navaid.name).join(', ');
+            const rapidApiKey = 'your_rapidapi_key558b410954msh015dce61d6f2b94p13db76jsncc800a42accd'; // Your RapidAPI key
+            fetch(`https://world-airports.p.rapidapi.com/api/search/coordinates/${latitude}/${longitude}`, {
+                method: 'GET',
+                headers: {
+                    'X-RapidAPI-Key': rapidApiKey
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.status === "OK" && data.data) {
+                    const airportList = data.data.map(airport => airport.name).join(', ');
                     document.getElementById('airportList').textContent = 'Nearby Airports: ' + airportList;
-                })
-                .catch(error => {
-                    console.error('Error fetching airport data:', error);
-                    document.getElementById('airportList').textContent = 'Failed to fetch nearby airports';
-                });
+                } else {
+                    console.error('No nearby airports found.');
+                    document.getElementById('airportList').textContent = 'No nearby airports found.';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching airport data:', error);
+                document.getElementById('airportList').textContent = 'Failed to fetch nearby airports';
+            });
         }
 
         // Event listener for form submission
