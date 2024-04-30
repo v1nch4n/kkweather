@@ -110,20 +110,18 @@
                 });
         }
 
-        // Function to fetch cities with temperature above the desired temperature
-        function fetchCitiesAboveTemp(desiredTemp) {
+        // Function to fetch cities with temperature above the desired temperature in Switzerland
+        function fetchCitiesAboveTempInSwitzerland(desiredTemp) {
             const apiKey = '70f3673b2a0dc31924858d6e6397bccb'; // Your API key
-            const url = `https://api.openweathermap.org/data/2.5/find?lat=0&lon=0&cnt=10&appid=${apiKey}`;
-
-            fetch(url)
+            fetch('https://api.openweathermap.org/data/2.5/box/city?bbox=5,45.5,10,47&appid=' + apiKey) // Coordinates for Switzerland
                 .then(response => response.json())
                 .then(data => {
-                    const cities = data.list.filter(city => city.main.temp > desiredTemp).map(city => city.name);
-                    document.getElementById('citiesAboveTemp').textContent = `Cities with temperature above ${desiredTemp}°C: ${cities.join(', ')}`;
+                    const cities = data.list.filter(city => city.main.temp > desiredTemp && city.sys.country === 'CH').map(city => city.name);
+                    document.getElementById('citiesAboveTemp').textContent = `Cities with temperature above ${desiredTemp}°C in Switzerland: ${cities.slice(0, 3).join(', ')}`;
                 })
                 .catch(error => {
-                    console.error('Error fetching cities above temperature:', error);
-                    document.getElementById('citiesAboveTemp').textContent = 'Failed to fetch cities above temperature';
+                    console.error('Error fetching cities above temperature in Switzerland:', error);
+                    document.getElementById('citiesAboveTemp').textContent = 'Failed to fetch cities above temperature in Switzerland';
                 });
         }
 
@@ -165,7 +163,7 @@
         document.getElementById('desiredTempForm').addEventListener('submit', function(event) {
             event.preventDefault(); // Prevent form submission
             const desiredTemp = document.getElementById('desiredTempInput').value;
-            fetchCitiesAboveTemp(desiredTemp); // Fetch cities with temperature above the desired temperature
+            fetchCitiesAboveTempInSwitzerland(desiredTemp); // Fetch cities with temperature above the desired temperature in Switzerland
         });
 
         // Fetch visitor information when the page loads
