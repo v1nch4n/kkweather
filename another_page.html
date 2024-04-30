@@ -60,12 +60,12 @@
                 });
         }
 
-        // Function to fetch nearby airports based on city coordinates
+        // Function to fetch nearby airports based on city coordinates using OurAirports API
         function fetchNearbyAirports(latitude, longitude) {
-            fetch(`https://opensky-network.org/api/airports?latitude=${latitude}&longitude=${longitude}&radius=100`)
+            fetch(`https://ourairports.com/data/navaids.json?near=${latitude},${longitude}&navaid=VTZ`)
                 .then(response => response.json())
                 .then(data => {
-                    const airportList = data.map(airport => airport.name).join(', ');
+                    const airportList = data.map(navaid => navaid.name).join(', ');
                     document.getElementById('airportList').textContent = 'Nearby Airports: ' + airportList;
                 })
                 .catch(error => {
