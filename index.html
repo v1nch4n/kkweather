@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Display Bike Picture and Temperature</title>
+</head>
+<body>
+    <h1>Check Out This Bike!</h1>
+    <img src="https://example.com/path/to/your/bike/image.jpg" alt="Bike Picture">
+    <br>
+    <form id="cityForm">
+        <label for="cityInput">Enter your city: </label>
+        <input type="text" id="cityInput" name="cityInput">
+        <button type="submit">Submit</button>
+    </form>
+    <p id="temperature">Temperature will be displayed here.</p>
+    <br>
+    <a href="another_page.html"><button>Go to Another Page</button></a>
+
+    <script>
+        // Function to fetch weather data based on city
+        function fetchWeather(city) {
+            fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=70f3673b2a0dc31924858d6e6397bccb`)
+                .then(response => response.json())
+                .then(data => {
+                    const temperature = Math.round(data.main.temp - 273.15); // Convert from Kelvin to Celsius
+                    document.getElementById('temperature').textContent = 'Temperature: ' + temperature + '°C';
+                })
+                .catch(error => {
+                    console.error('Error fetching weather data:', error);
+                    document.getElementById('temperature').textContent = 'Failed to fetch temperature';
+                });
+        }
+
+        // Event listener for form submission
+        document.getElementById('cityForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form submission
+            const city = document.getElementById('cityInput').value;
+            fetchWeather(city);
+        });
+    </script>
+</body>
+</html>
