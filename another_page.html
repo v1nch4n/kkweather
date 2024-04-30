@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Display Bike Picture, Temperature, and Nearby Airports</title>
+</head>
+<body>
+    <h1>KKWEATHER Corp.</h1>
+    <img src="https://example.com/path/to/your/bike/image.jpg" alt="Bike Picture">
+    <br>
+    <form id="cityForm">
+        <label for="cityInput">Enter your city: </label>
+        <input type="text" id="cityInput" name="cityInput">
+        <button type="submit">Submit</button>
+    </form>
+    <p id="temperature">Temperature will be displayed here.</p>
+    <p id="airportList">Nearby airports will be displayed here.</p>
+    <br>
+    <a href="another_page.html"><button>Go to Another Page</button></a>
+
+    <script>
+        // Function to fetch weather data based on city
+        function fetchWeather(city) {
+            fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=your_api_key`)
+                .then(response => response.json())
+                .then(data => {
+                    const temperature = Math.round(data.main.temp - 273.15); // Convert from Kelvin to Celsius
+                    document.getElementById('temperature').textContent = 'Temperature: ' + temperature + '°C';
+                })
+                .catch(error => {
+                    console.error('Error fetching weather data:', error);
+                    document.getElementById('temperature').textContent = 'Failed to fetch temperature';
+                });
+        }
+
+        // Function to fetch nearby airports based on city coordinates
+        function fetchNearbyAirports(latitude, longitude) {
+            fetch(`https://opensky-network.org/api/airports?latitude=${latitude}&longitude=${longitude}&radius=100`)
+                .then(response => response.json())
+                .then(data => {
+                    const airportList = data.map(airport => airport.name).join(', ');
+                    document.getElementById('airportList').textContent = 'Nearby Airports: ' + airportList;
+                })
+                .catch(error => {
+                    console.error('Error fetching airport data:', error);
+                    document.getElementById('airportList').textContent = 'Failed to fetch nearby airports';
+                });
+        }
+
+        // Event listener for form submission
+        document.getElementById('cityForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form submission
+            const city = document.getElementById('cityInput').value;
+            fetchWeather(city); // Fetch weather data
+            fetchNearbyAirports(0, 0); // Dummy coordinates for now, replace with actual coordinates
+        });
+    </script>
+</body>
+</html>
