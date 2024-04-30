@@ -6,7 +6,7 @@
     <title>Display Bike Picture, Temperature, and Nearby Airports</title>
 </head>
 <body>
-    <h1>KKWEATHER Corp.</h1>
+    <h1>Check Out This Bike!</h1>
     <img src="https://example.com/path/to/your/bike/image.jpg" alt="Bike Picture">
     <br>
     <form id="cityForm">
@@ -34,6 +34,30 @@
                 });
         }
 
+        // Function to fetch coordinates of a city using OpenStreetMap Nominatim API
+        function fetchCoordinates(city) {
+            const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(city)}`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data.length > 0) {
+                        const latitude = data[0].lat;
+                        const longitude = data[0].lon;
+                        console.log(`Coordinates of ${city}: ${latitude}, ${longitude}`);
+                        // Call fetchWeather with the coordinates
+                        fetchWeather(city);
+                        // Call fetchNearbyAirports with the coordinates
+                        fetchNearbyAirports(latitude, longitude);
+                    } else {
+                        console.error('No results found for the city:', city);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching coordinates:', error);
+                });
+        }
+
         // Function to fetch nearby airports based on city coordinates
         function fetchNearbyAirports(latitude, longitude) {
             fetch(`https://opensky-network.org/api/airports?latitude=${latitude}&longitude=${longitude}&radius=100`)
@@ -52,8 +76,7 @@
         document.getElementById('cityForm').addEventListener('submit', function(event) {
             event.preventDefault(); // Prevent form submission
             const city = document.getElementById('cityInput').value;
-            fetchWeather(city); // Fetch weather data
-            fetchNearbyAirports(0, 0); // Dummy coordinates for now, replace with actual coordinates
+            fetchCoordinates(city); // Fetch coordinates and then weather data and nearby airports
         });
     </script>
 </body>
