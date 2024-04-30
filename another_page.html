@@ -7,18 +7,32 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
-            background-color: #2e1b3b; /* Deep purple color */
-            font-family: 'PorscheNext', Arial, sans-serif; /* Typeface inspired by Porsche */
+            font-family: 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif; /* Apple's system font */
+            background-color: #f4f4f4; /* Light gray background */
+            color: #333; /* Dark gray text color */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
 
-        /* Font color inspired by Porsche cray color */
-        h1, h2, label, button {
-            color: #3C3C3C; /* Porsche cray color */
+        .container {
+            max-width: 600px;
+            padding: 20px;
+            background-color: #fff; /* White background */
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Light shadow */
         }
 
-        /* Styling for buttons */
+        h1, h2, label {
+            margin-top: 0;
+        }
+
         button {
-            background-color: #FFD700; /* Gold color */
+            background-color: #0070c9; /* Apple's blue color */
+            color: #fff; /* White text color */
             border: none;
             padding: 10px 20px;
             cursor: pointer;
@@ -28,34 +42,36 @@
         }
 
         button:hover {
-            background-color: #FFB300; /* Darker gold color on hover */
+            background-color: #0056a0; /* Darker blue color on hover */
         }
     </style>
 </head>
 <body>
-    <h1>Check Out This Airport!</h1>
-    <i class="fas fa-plane fa-5x"></i> <!-- Airport icon -->
-    <br>
-    <form id="cityForm">
-        <label for="cityInput">Enter your city: </label>
-        <input type="text" id="cityInput" name="cityInput">
-        <button type="submit">Submit</button>
-    </form>
-    <p id="temperature">Temperature will be displayed here.</p>
-    <p id="airportList">Nearby airports will be displayed here.</p>
-    <p id="coordinates">Coordinates will be displayed here.</p>
-    <br>
-    <a href="another_page.html"><button>Go to Another Page</button></a> <!-- Link to another page -->
-    <br><br>
-    <a href="yet_another_page.html"><button>Go to Again Another Page</button></a> <!-- Link to yet another page -->
+    <div class="container">
+        <h1>Check Out This Airport!</h1>
+        <i class="fas fa-plane fa-5x"></i> <!-- Airport icon -->
+        <br>
+        <form id="cityForm">
+            <label for="cityInput">Enter your city: </label>
+            <input type="text" id="cityInput" name="cityInput">
+            <button type="submit">Submit</button>
+        </form>
+        <p id="temperature">Temperature will be displayed here.</p>
+        <p id="airportList">Nearby airports will be displayed here.</p>
+        <p id="coordinates">Coordinates will be displayed here.</p>
+        <br>
+        <a href="another_page.html"><button>Go to Another Page</button></a> <!-- Link to another page -->
+        <br><br>
+        <a href="yet_another_page.html"><button>Go to Again Another Page</button></a> <!-- Link to yet another page -->
 
-    <h2>Check Out This Airport!</h2>
-    <form id="airportForm">
-        <label for="airportInput">Enter airport code: </label>
-        <input type="text" id="airportInput" name="airportInput" value="dub">
-        <button type="submit">Submit</button>
-    </form>
-    <p id="airportInfo">Airport information will be displayed here.</p>
+        <h2>Check Out This Airport!</h2>
+        <form id="airportForm">
+            <label for="airportInput">Enter airport code: </label>
+            <input type="text" id="airportInput" name="airportInput" value="dub">
+            <button type="submit">Submit</button>
+        </form>
+        <p id="airportInfo">Airport information will be displayed here.</p>
+    </div>
 
     <script>
         // Function to fetch weather data based on city
