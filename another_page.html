@@ -5,6 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Display Airport Icon, Temperature, and Nearby Airports</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            animation: rainbow 10s infinite;
+        }
+
+        @keyframes rainbow {
+            0% { background-color: red; }
+            16.666% { background-color: orange; }
+            33.333% { background-color: yellow; }
+            50% { background-color: green; }
+            66.666% { background-color: blue; }
+            83.333% { background-color: indigo; }
+            100% { background-color: violet; }
+        }
+    </style>
 </head>
 <body>
     <h1>Check Out This Airport!</h1>
@@ -20,6 +35,14 @@
     <p id="coordinates">Coordinates will be displayed here.</p>
     <br>
     <a href="another_page.html"><button>Go to Another Page</button></a>
+
+    <h2>Check Out This Airport!</h2>
+    <form id="airportForm">
+        <label for="airportInput">Enter airport code: </label>
+        <input type="text" id="airportInput" name="airportInput" value="dub">
+        <button type="submit">Submit</button>
+    </form>
+    <p id="airportInfo">Airport information will be displayed here.</p>
 
     <script>
         // Function to fetch weather data based on city
@@ -60,10 +83,10 @@
                 });
         }
 
-        // Function to fetch nearby airports based on city coordinates using World Airports API from RapidAPI
+        // Function to fetch nearby airports based on city coordinates using World Airports Directory API from RapidAPI
         function fetchNearbyAirports(latitude, longitude) {
-            const rapidApiKey = 'your_rapidapi_key558b410954msh015dce61d6f2b94p13db76jsncc800a42accd'; // Your RapidAPI key
-            fetch(`https://world-airports.p.rapidapi.com/api/search/coordinates/${latitude}/${longitude}`, {
+            const rapidApiKey = '558b410954msh015dce61d6f2b94p13db76jsncc800a42accd'; // Your RapidAPI key
+            fetch(`https://world-airports-directory.p.rapidapi.com/v1/airports/nearby/${latitude}/${longitude}`, {
                 method: 'GET',
                 headers: {
                     'X-RapidAPI-Key': rapidApiKey
@@ -71,7 +94,7 @@
             })
             .then(response => response.json())
             .then(data => {
-                if (data && data.status === "OK" && data.data) {
+                if (data && data.data) {
                     const airportList = data.data.map(airport => airport.name).join(', ');
                     document.getElementById('airportList').textContent = 'Nearby Airports: ' + airportList;
                 } else {
@@ -85,11 +108,49 @@
             });
         }
 
+        // Function to fetch airport information based on airport code using World Airports Directory API from RapidAPI
+        function fetchAirportInfo(airportCode) {
+            const rapidApiKey = '558b410954msh015dce61d6f2b94p13db76jsncc800a42accd'; // Your RapidAPI key
+            fetch(`https://world-airports-directory.p.rapidapi.com/v1/airports/${airportCode}`, {
+                method: 'GET',
+                headers: {
+                    'X-RapidAPI-Key': rapidApiKey
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.data) {
+                    const airportInfo = data.data;
+                    document.getElementById('airportInfo').innerHTML = `
+                        <h2>${airportInfo.name}</h2>
+                        <p>IATA code: ${airportInfo.iataCode}</p>
+                        <p>ICAO code: ${airportInfo.icaoCode}</p>
+                        <p>Location: ${airportInfo.location.city}, ${airportInfo.location.country}</p>
+                        <p>Latitude: ${airportInfo.location.latitude}, Longitude: ${airportInfo.location.longitude}</p>
+                    `;
+                } else {
+                    console.error('No airport found.');
+                    document.getElementById('airportInfo').textContent = 'Airport not found.';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching airport data:', error);
+                document.getElementById('airportInfo').textContent = 'Failed to fetch airport information';
+            });
+        }
+
         // Event listener for form submission
         document.getElementById('cityForm').addEventListener('submit', function(event) {
             event.preventDefault(); // Prevent form submission
             const city = document.getElementById('cityInput').value;
             fetchCoordinates(city); // Fetch coordinates and then weather data and nearby airports
+        });
+
+        // Event listener for airport form submission
+        document.getElementById('airportForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form submission
+            const airportCode = document.getElementById('airportInput').value;
+            fetchAirportInfo(airportCode); // Fetch airport information
         });
     </script>
 </body>
